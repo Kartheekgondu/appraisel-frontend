@@ -1,0 +1,839 @@
+/* On-screen letter is presented as a clean A4-style paper preview. */
+.letter-preview {
+  box-sizing: border-box;
+  width: min(794px, 100%);
+  min-height: 1123px;
+  margin: 28px auto 22px;
+  padding: 48px 48px 30px;
+  background: #fff;
+  color: #1a1a1a;
+  font-family: Calibri, Carlito, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 400;
+  border: 1px solid #e0e3e8;
+  text-align: left;
+  box-shadow: 0 10px 32px rgba(16, 24, 40, .12);
+}
+
+.letter-preview .letter-title {
+  text-align: center !important;
+  color: #365b8d;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  margin: 0 0 28px;
+  line-height: 1.4;
+}
+
+.letter-preview h4 {
+  margin: 24px 0 12px;
+  color: #1a1a1a;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.letter-preview p {
+  margin: 13px 0;
+  text-align: justify;
+}
+
+.letter-preview .appraisal-details-list {
+  padding-left: 24px;
+  margin: 13px 0 24px;
+  line-height: 1.45;
+}
+
+.letter-preview .appraisal-details-list li {
+  padding-left: 2px;
+  margin: 5px 0;
+  line-height: 1.45;
+}
+
+.letter-preview .salary-structure {
+  margin: 18px 0 22px;
+  width: 100%;
+  break-inside: avoid;
+}
+
+.letter-preview .salary-structure table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 13px;
+  color: #1a1a1a;
+}
+
+.letter-preview .salary-structure th,
+.letter-preview .salary-structure td {
+  padding: 8px 7px;
+  border: 1px solid #202020;
+  text-align: right;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+
+.letter-preview .salary-structure th:first-child,
+.letter-preview .salary-structure td:first-child {
+  text-align: left;
+  width: 43%;
+}
+
+.letter-preview .salary-structure thead th {
+  background: #e2e2e2;
+  font-weight: 700;
+  text-align: center;
+}
+
+.letter-preview .salary-structure .total-row th,
+.letter-preview .salary-structure .total-row td,
+.letter-preview .salary-structure .take-home-row th {
+  font-weight: 700;
+}
+
+.letter-preview .salary-structure .section-row th {
+  text-align: left;
+  background: #fff;
+}
+
+.letter-preview .salary-note {
+  font-size: 11px;
+  color: #555;
+  text-align: left;
+}
+
+.letter-preview .company-gst {
+  margin-top: 30px !important;
+  text-align: center !important;
+  color: #2457D6;
+  font-weight: 700;
+  font-size: 13px;
+  border-top: 1px solid #b8bcc4;
+  padding-top: 10px;
+}
+
+.download-button { 
+  margin: 20px 0; 
+  background: #2457a7; 
+  color: #fff; 
+}
+
+@media (max-width: 600px) {
+  .letter-preview {
+    width: 100%;
+    min-height: auto;
+    margin: 12px auto;
+    padding: 24px 18px;
+    font-size: 13px;
+    border-left: 0;
+    border-right: 0;
+  }
+  .letter-preview .salary-structure table { font-size: 10px; }
+  .letter-preview .salary-structure th,
+  .letter-preview .salary-structure td { padding: 5px 3px; }
+  .letter-preview .letter-title { font-size: 15px; }
+}
+
+@media print {
+  @page { size: A4; margin: 0; }
+  html, body, #root { width: 100%; min-height: 0; margin: 0; padding: 0; background: #fff !important; }
+  body * { visibility: hidden; }
+  #appraisal-letter, #appraisal-letter * { visibility: visible; }
+  #appraisal-letter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    margin: 0;
+    padding: 48px 48px 26px;
+    border: 0;
+    box-shadow: none;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+  #appraisal-letter .letter-brand-row img.company-logo {
+    position: static !important;
+    display: block !important;
+    width: 150px !important;
+    height: 156px !important;
+    max-width: 150px !important;
+    max-height: 156px !important;
+    object-fit: contain !important;
+    object-position: left top !important;
+    margin: 0 !important;
+  }
+  #appraisal-letter .signature-stamp-space { border: 0; }
+  #appraisal-letter .signature-stamp-image { max-width: 220px; max-height: 90px; }
+  #appraisal-letter .letter-title { font-size: 12pt; color: #365b8d; text-align: center !important; }
+  #appraisal-letter .salary-structure { break-inside: avoid; }
+  #appraisal-letter .salary-structure table { font-size: 9pt; }
+  #appraisal-letter .salary-structure tr { break-inside: avoid; }
+  #appraisal-letter .company-gst { font-size: 10pt; }
+  .download-button, .result-toolbar, .app-header, .form-card, .saved-appraisals { display: none !important; }
+}
+
+/* Multi-page layout support */
+#appraisal-letter {
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+#appraisal-letter .letter-page {
+  box-sizing: border-box;
+  position: relative !important;
+  display: flex;
+  flex-direction: column;
+  width: min(794px, 100%);
+  min-height: 1123px;
+  margin: 28px auto;
+  padding: 48px 48px 30px;
+  background: #fff;
+  border: 1px solid #e0e3e8;
+  box-shadow: 0 10px 32px rgba(16, 24, 40, .12);
+}
+
+#appraisal-letter .letter-page .company-gst { 
+  margin-top: auto !important; 
+}
+
+/* BRAND ROW & LOGO ALIGNMENT (TOP RIGHT) */
+#appraisal-letter .letter-brand-row {
+  display: flex !important;
+  position: relative !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  width: 100% !important;
+  min-height: 156px !important;
+  height: auto !important;
+  margin: 0 0 18px !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+#appraisal-letter .letter-brand-row img.company-logo {
+  position: static !important;
+  display: block !important;
+  width: 150px !important;
+  height: 156px !important;
+  max-width: 150px !important;
+  max-height: 156px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  object-fit: contain !important;
+  object-position: left top !important;
+  transform: none !important;
+}
+
+#appraisal-letter .letter-signature-area { 
+  margin-top: 22px; 
+}
+
+#appraisal-letter .signature-stamp-space { 
+  width: 220px; 
+  height: 90px; 
+  margin-top: 8px; 
+  margin-left: 0; 
+}
+
+#appraisal-letter .signature-stamp-image { 
+  display: block; 
+  width: auto; 
+  max-width: 220px; 
+  height: auto; 
+  max-height: 90px; 
+  object-fit: contain; 
+  object-position: left center; 
+  margin: 8px 0 0; 
+}
+
+#appraisal-letter .letter-page-two { 
+  padding-top: 54px; 
+}
+
+#appraisal-letter .letter-signoff { 
+  margin-top: 26px; 
+}
+
+@media (max-width: 600px) {
+  #appraisal-letter .letter-page {
+    width: 100%;
+    min-height: 0;
+    margin: 12px auto;
+    padding: 24px 18px;
+    border-left: 0;
+    border-right: 0;
+  }
+  #appraisal-letter .letter-brand-row {
+    min-height: 120px !important;
+  }
+  #appraisal-letter .letter-brand-row img.company-logo {
+    width: 116px !important;
+    height: 120px !important;
+    max-width: 116px !important;
+    max-height: 120px !important;
+  }
+  #appraisal-letter .letter-page .company-gst { 
+    margin-top: 30px !important; 
+  }
+}
+
+@media print {
+  #appraisal-letter {
+    position: static;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  #appraisal-letter .letter-page {
+    width: 100%;
+    min-height: 0;
+    height: 10.69in;
+    margin: 0;
+    padding: 48px 48px 26px;
+    border: 0;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+  #appraisal-letter .letter-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+/* Reference-letter visual match: compact top-left brand, centered blue title,
+   black body copy, grey salary-table header, and bottom GST rule. */
+#appraisal-letter .letter-page {
+  width: min(794px, 100%);
+  min-height: 1123px;
+  padding: 48px 48px 26px;
+  background: #fff;
+  color: #111;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  line-height: 1.38;
+  border: 0;
+  box-shadow: none;
+}
+#appraisal-letter .letter-brand-row {
+  min-height: 92px !important;
+  height: 92px !important;
+  margin: 0 0 20px !important;
+  padding: 0 !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+#appraisal-letter .letter-brand-row img.company-logo {
+  width: 100px !important;
+  height: 92px !important;
+  max-width: 100px !important;
+  max-height: 92px !important;
+  object-fit: contain !important;
+  object-position: left top !important;
+}
+#appraisal-letter .letter-title {
+  color: #365b8d !important;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px !important;
+  line-height: 1.35;
+  font-weight: 700;
+  text-align: center !important;
+  margin: 0 0 28px !important;
+}
+#appraisal-letter p { margin: 12px 0; line-height: 1.38; }
+#appraisal-letter .appraisal-details-list { margin: 12px 0 24px; padding-left: 24px; line-height: 1.45; }
+#appraisal-letter .appraisal-details-list li { margin: 5px 0; padding-left: 2px; line-height: 1.45; }
+#appraisal-letter h4 { margin: 22px 0 12px; font-size: 11px; color: #111; }
+#appraisal-letter .salary-structure { margin: 18px 0 22px; padding: 0 28px; }
+#appraisal-letter .salary-structure table { font-size: 10px; }
+#appraisal-letter .salary-structure th,
+#appraisal-letter .salary-structure td { padding: 7px 5px; border: 1px solid #222; }
+#appraisal-letter .salary-structure thead th { background: #dedede !important; }
+#appraisal-letter .company-gst {
+  margin-top: auto !important;
+  padding-top: 30px !important;
+  border-top: 1px solid #b8bcc4;
+  text-align: center !important;
+  color: #365b8d !important;
+  font-size: 10px !important;
+  font-weight: 700;
+}
+#appraisal-letter .letter-page-two { padding-top: 78px; }
+#appraisal-letter .letter-page-two .company-gst { margin-top: auto !important; }
+#appraisal-letter .letter-signoff { margin-top: 24px; }
+#appraisal-letter .signature-stamp-image { max-width: 150px; max-height: 85px; }
+@media (max-width: 600px) {
+  #appraisal-letter .letter-page { padding: 30px 22px 24px; min-height: 0; }
+  #appraisal-letter .letter-brand-row { min-height: 82px !important; height: 82px !important; }
+  #appraisal-letter .letter-brand-row img.company-logo { width: 90px !important; height: 82px !important; max-width: 90px !important; max-height: 82px !important; }
+  #appraisal-letter .salary-structure { padding: 0; }
+}
+@media print {
+  #appraisal-letter .letter-page { padding: 48px 48px 26px; min-height: 10.69in; height: 10.69in; }
+  #appraisal-letter .letter-page-two { padding-top: 78px; }
+  #appraisal-letter .letter-brand-row img.company-logo { width: 100px !important; height: 92px !important; max-width: 100px !important; max-height: 92px !important; }
+}
+
+/* ==========================================================================
+   RELIEVING LETTER STYLE SPECIFICATION
+   Values consolidated from the four supplied style-reference images.
+   These rules intentionally appear last to override earlier conflicting rules.
+   ========================================================================== */
+
+/* App title is part of the application UI, not the printed letter. */
+.app-header .app-title,
+.app-header .page-title,
+.app-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #E23A8E 0%, #7B4DF0 50%, #2E9DE0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* On-screen letter preview */
+.letter-preview,
+#appraisal-letter .letter-page {
+  box-sizing: border-box;
+  width: min(794px, 100%);
+  min-height: 1123px;
+  margin: 28px auto 22px;
+  padding: 44px 44px 22px;
+  background: #fff;
+  color: #1a1a1a;
+  font-family: Calibri, Carlito, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 400;
+  font-style: normal;
+  border: 1px solid #e0e3e8;
+  text-align: left;
+  box-shadow: 0 10px 32px rgba(16, 24, 40, .12);
+}
+
+#appraisal-letter {
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* Logo: max-height 52px and max-width 200px in the browser preview. */
+.letter-preview .letter-brand-row,
+#appraisal-letter .letter-brand-row {
+  display: flex !important;
+  position: relative !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  width: 100% !important;
+  min-height: 52px !important;
+  height: auto !important;
+  margin: 0 0 16px !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.letter-preview .letter-brand-row img.company-logo,
+#appraisal-letter .letter-brand-row img.company-logo {
+  position: static !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: 200px !important;
+  max-height: 52px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  object-fit: contain !important;
+  object-position: left top !important;
+  transform: none !important;
+}
+
+/* Letter heading: centered, bold, underlined, near-black. */
+.letter-preview .letter-title,
+#appraisal-letter .letter-title {
+  margin: 0 0 20px !important;
+  color: #1a1a1a !important;
+  font-family: Calibri, Carlito, Arial, sans-serif !important;
+  font-size: 16px !important;
+  line-height: 1.4;
+  font-weight: 700 !important;
+  font-style: normal !important;
+  text-decoration: underline !important;
+  text-align: center !important;
+}
+
+/* Body copy and paragraph rhythm. */
+.letter-preview p,
+#appraisal-letter p {
+  margin: 13px 0;
+  color: #1a1a1a;
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 400;
+  font-style: normal;
+  text-align: justify;
+}
+
+.letter-preview strong,
+.letter-preview b,
+#appraisal-letter strong,
+#appraisal-letter b {
+  font-weight: 700;
+}
+
+.letter-preview h4,
+#appraisal-letter h4 {
+  margin: 20px 0 12px;
+  color: #1a1a1a;
+  font-family: Calibri, Carlito, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.letter-preview .appraisal-details-list,
+#appraisal-letter .appraisal-details-list {
+  padding-left: 24px;
+  margin: 13px 0 24px;
+  line-height: 1.45;
+}
+
+.letter-preview .appraisal-details-list li,
+#appraisal-letter .appraisal-details-list li {
+  padding-left: 2px;
+  margin: 5px 0;
+  line-height: 1.45;
+}
+
+/* Salary table styling retained, with the reference's near-black text. */
+.letter-preview .salary-structure,
+#appraisal-letter .salary-structure {
+  margin: 18px 0 22px;
+  width: 100%;
+  break-inside: avoid;
+}
+
+.letter-preview .salary-structure table,
+#appraisal-letter .salary-structure table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 13px;
+  color: #1a1a1a;
+}
+
+.letter-preview .salary-structure th,
+.letter-preview .salary-structure td,
+#appraisal-letter .salary-structure th,
+#appraisal-letter .salary-structure td {
+  padding: 8px 7px;
+  border: 1px solid #202020;
+  text-align: right;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+
+.letter-preview .salary-structure th:first-child,
+.letter-preview .salary-structure td:first-child,
+#appraisal-letter .salary-structure th:first-child,
+#appraisal-letter .salary-structure td:first-child {
+  text-align: left;
+  width: 43%;
+}
+
+.letter-preview .salary-structure thead th,
+#appraisal-letter .salary-structure thead th {
+  background: #e2e2e2;
+  font-weight: 700;
+  text-align: center;
+}
+
+.letter-preview .salary-structure .total-row th,
+.letter-preview .salary-structure .total-row td,
+.letter-preview .salary-structure .take-home-row th,
+#appraisal-letter .salary-structure .total-row th,
+#appraisal-letter .salary-structure .total-row td,
+#appraisal-letter .salary-structure .take-home-row th {
+  font-weight: 700;
+}
+
+.letter-preview .salary-structure .section-row th,
+#appraisal-letter .salary-structure .section-row th {
+  text-align: left;
+  background: #fff;
+}
+
+.letter-preview .salary-note,
+#appraisal-letter .salary-note {
+  font-size: 11px;
+  color: #555;
+  text-align: left;
+}
+
+/* Stamp / signature: max-width 220px, max-height 90px. */
+.letter-preview .signature-stamp-space,
+#appraisal-letter .signature-stamp-space {
+  width: 220px;
+  max-width: 100%;
+  height: 90px;
+  margin-top: 8px;
+  margin-left: 0;
+  border: 0;
+}
+
+.letter-preview .signature-stamp-image,
+#appraisal-letter .signature-stamp-image {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 220px;
+  max-height: 90px;
+  object-fit: contain;
+  object-position: left center;
+  margin: 8px 0 0;
+}
+
+.letter-preview .letter-signature-area,
+#appraisal-letter .letter-signature-area {
+  margin-top: 22px;
+}
+
+.letter-preview .letter-signoff,
+#appraisal-letter .letter-signoff {
+  margin-top: 26px;
+}
+
+/* Footer: full width, centered, blue, with a light-grey top border. */
+.letter-preview .company-gst,
+#appraisal-letter .company-gst {
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: auto !important;
+  padding: 10px 0 0 !important;
+  border-top: 1px solid #b8bcc4;
+  text-align: center !important;
+  color: #2457D6 !important;
+  font-family: Calibri, Carlito, Arial, sans-serif !important;
+  font-size: 13px !important;
+  line-height: 1.4;
+  font-weight: 700 !important;
+  font-style: normal !important;
+}
+
+/* Keep the download button separate from the letter's print styles. */
+.download-button {
+  margin: 20px 0;
+  background: #2457a7;
+  color: #fff;
+}
+
+/* Responsive preview. */
+@media (max-width: 600px) {
+  .letter-preview,
+  #appraisal-letter .letter-page {
+    width: 100%;
+    min-height: 0;
+    margin: 12px auto;
+    padding: 24px 18px 22px;
+    border-left: 0;
+    border-right: 0;
+    font-size: 13px;
+  }
+
+  .letter-preview .letter-brand-row,
+  #appraisal-letter .letter-brand-row {
+    min-height: 52px !important;
+  }
+
+  .letter-preview .letter-brand-row img.company-logo,
+  #appraisal-letter .letter-brand-row img.company-logo {
+    max-width: 200px !important;
+    max-height: 52px !important;
+  }
+
+  .letter-preview .letter-title,
+  #appraisal-letter .letter-title {
+    font-size: 15px !important;
+  }
+
+  .letter-preview .salary-structure,
+  #appraisal-letter .salary-structure {
+    padding: 0;
+  }
+
+  .letter-preview .salary-structure table,
+  #appraisal-letter .salary-structure table {
+    font-size: 10px;
+  }
+
+  .letter-preview .salary-structure th,
+  .letter-preview .salary-structure td,
+  #appraisal-letter .salary-structure th,
+  #appraisal-letter .salary-structure td {
+    padding: 5px 3px;
+  }
+}
+
+/* PDF output: values from letterTemplate.js reference image. */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  html,
+  body,
+  #root {
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #appraisal-letter,
+  #appraisal-letter * {
+    visibility: visible;
+  }
+
+  #appraisal-letter {
+    position: static;
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    background: #fff;
+    color: #1a1a1a;
+    font-family: Calibri, Carlito, Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  #appraisal-letter .letter-page {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    margin: 0;
+    padding: 48px 48px 26px;
+    border: 0;
+    box-shadow: none;
+    background: #fff;
+    color: #1a1a1a;
+    font-family: Calibri, Carlito, Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    font-weight: 400;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  #appraisal-letter .letter-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  #appraisal-letter .letter-brand-row {
+    min-height: 56px !important;
+    height: auto !important;
+    margin: 0 0 16px !important;
+  }
+
+  #appraisal-letter .letter-brand-row img.company-logo {
+    width: auto !important;
+    height: auto !important;
+    max-width: 200px !important;
+    max-height: 56px !important;
+    object-fit: contain !important;
+    object-position: left top !important;
+  }
+
+  #appraisal-letter .letter-title {
+    margin: 0 0 20px !important;
+    color: #1a1a1a !important;
+    font-family: Calibri, Carlito, Arial, sans-serif !important;
+    font-size: 12pt !important;
+    line-height: 1.4;
+    font-weight: 700 !important;
+    text-align: center !important;
+    text-decoration: underline !important;
+  }
+
+  #appraisal-letter p {
+    margin: 14px 0;
+    color: #1a1a1a;
+    font-size: 11pt;
+    line-height: 1.5;
+    font-weight: 400;
+    font-style: normal;
+    text-align: justify;
+  }
+
+  #appraisal-letter h4 {
+    color: #1a1a1a;
+    font-size: 11pt;
+    font-weight: 700;
+  }
+
+  #appraisal-letter .salary-structure {
+    break-inside: avoid;
+  }
+
+  #appraisal-letter .salary-structure table {
+    font-size: 9pt;
+  }
+
+  #appraisal-letter .salary-structure tr {
+    break-inside: avoid;
+  }
+
+  #appraisal-letter .signature-stamp-space {
+    border: 0;
+  }
+
+  #appraisal-letter .signature-stamp-image {
+    max-width: 220px !important;
+    max-height: 90px !important;
+  }
+
+  #appraisal-letter .company-gst {
+    width: 100%;
+    margin-top: auto !important;
+    padding-top: 10px !important;
+    border-top: 1px solid #b8bcc4;
+    color: #2457D6 !important;
+    font-size: 10pt !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+  }
+
+  .download-button,
+  .result-toolbar,
+  .app-header,
+  .form-card,
+  .saved-appraisals {
+    display: none !important;
+  }
+}

@@ -1,58 +1,53 @@
-# Appraisel React Frontend — Vercel + Spring Boot on Render
+# Appraisel React frontend — Vercel proxy to Spring Boot on Render
 
-## Backend connection
+## Architecture
 
-This frontend is configured to call the Spring Boot backend at:
+- React/Vite frontend: deployed on Vercel.
+- Spring Boot API: `https://appraisel-backend.onrender.com` (runs on Render).
+- Vercel proxies browser requests from `/backend/*` to the Render backend. The browser therefore calls the Vercel origin, avoiding browser CORS for these proxied requests.
 
-`https://appraisel-backend.onrender.com`
+## Vercel configuration
 
-The backend controller in the supplied backend project uses the base path `/api/appraisels`.
-The frontend service calls these matching endpoints:
+The root `vercel.json` contains these rewrites in this order:
 
-- `GET /api/appraisels` — list saved appraisals
-- `POST /api/appraisels` — create/save appraisal
-- `POST /api/appraisels/calculate` — calculate salary
-- `GET /api/appraisels/{id}` — retrieve appraisal
-- `POST /api/appraisels/{id}/email` — send appraisal email
-- `GET /api/appraisels/{id}/pdf` — download PDF
-- `GET /api/appraisels/health` — backend health check
+1. `/backend/:path*` → `https://appraisel-backend.onrender.com/:path*`
+2. `/(.*)` → `/index.html` for the React single-page app.
 
-## Deploy to Vercel
+The frontend API client uses `VITE_API_BASE_URL=/backend`. The service calls the existing backend routes:
+- `GET /api/appraisels`
+- `POST /api/appraisels`
+- `POST /api/appraisels/calculate`
+- `GET /api/appraisels/{id}`
+- `POST /api/appraisels/{id}/email`
+- `GET /api/appraisels/{id}/pdf`
+- `GET /api/appraisels/health`
 
-1. Push this project folder to GitHub (do not upload `node_modules`, `dist`, or local secrets).
-2. In Vercel, import the GitHub repository.
-3. Framework preset: **Vite**.
-4. Build command: `npm run build`.
-5. Output directory: `dist`.
-6. Add this environment variable in Vercel Project → Settings → Environment Variables:
+For example, the browser requests `/backend/api/appraisels`; Vercel forwards it to `https://appraisel-backend.onrender.com/api/appraisels`.
 
-   `VITE_API_BASE_URL=https://appraisel-backend.onrender.com`
+## Deploy
 
-7. Apply it to Production (and Preview if required), save, then redeploy.
+1. Push the contents of this folder to your frontend GitHub repository. Do not commit `.git`, `node_modules`, or `dist`.
+2. Import/select that repository in Vercel.
+3. Framework preset: Vite; build command: `npm run build`; output directory: `dist`.
+4. In Vercel → Project → Settings → Environment Variables, remove or change any old `VITE_API_BASE_URL` value that points directly to Render. Set it to `/backend` for Production (and Preview if desired).
+5. Redeploy after changing environment variables.
 
-The project includes `.env.production` with the same production backend URL as a fallback. Vercel's configured environment variable takes precedence at build time.
+`vercel.json` is included in the repository and should be deployed with the frontend. No separate Vercel backend runtime is created: this is a reverse proxy to the Spring Boot service on Render.
 
-## Required backend CORS setting
+## Backend / CORS
 
-The backend source provided with this project reads `FRONTEND_URL` in `CorsConfig`.
-In Render → backend service → Environment, set:
-
-`FRONTEND_URL=https://YOUR-VERCEL-PROJECT.vercel.app`
-
-Use your actual Vercel production origin only: scheme + hostname, with no path and no trailing slash. If you use a Vercel custom domain, configure that exact domain too. The backend must be redeployed after changing the variable.
-
-The backend CORS mapping in the supplied source allows `/api/**`, `GET`, `POST`, `PUT`, `DELETE`, and `OPTIONS`, with all headers. If the frontend uses a Vercel preview URL, that origin must also be allowed by the backend; the supplied backend currently accepts one `FRONTEND_URL` origin.
+The supplied backend CORS configuration accepts comma-separated origins in `FRONTEND_URL`, for direct browser calls if needed. The Vercel proxy path is same-origin and normally does not require CORS. In Render, set `FRONTEND_URL` to your actual Vercel origin (scheme + hostname only), e.g. `https://your-project.vercel.app`. Multiple origins can be comma-separated. Redeploy the backend after changing it.
 
 ## Local development
 
-1. Install Node.js 20 or newer.
-2. Run `npm install`.
-3. Set `VITE_API_BASE_URL=http://localhost:9090` in `.env.local`.
-4. Run `npm run dev`.
-5. Verify using `npm run build`.
+For direct local API calls, create `.env.local` with:
+`VITE_API_BASE_URL=http://localhost:8080`
+(or the actual local Spring Boot port), then run `npm install` and `npm run dev`.
 
-## Notes
+## Troubleshooting
 
-- Render free services may sleep when idle; the first API request can take longer while the service wakes.
-- The backend root URL may return 404. Test `https://appraisel-backend.onrender.com/api/appraisels/health` instead.
-- Do not commit `.env.local`, passwords, SMTP credentials, or database secrets.
+- Test the backend directly at `https://appraisel-backend.onrender.com/api/appraisels/health`.
+- Test the Vercel proxy at `https://YOUR-VERCEL-DOMAIN/backend/api/appraisels/health`.
+- If the direct backend health URL works but the Vercel proxy does not, check that the latest Vercel deployment includes the root `vercel.json`.
+- If health works but saved records fail, inspect Render logs and verify the MySQL environment variables and database connectivity.
+- Render free instances can sleep; the first request after inactivity may take time.

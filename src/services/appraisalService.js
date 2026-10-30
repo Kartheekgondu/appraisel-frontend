@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const BASE_URL = (
-  import.meta.env.VITE_API_BASE_URL || "https://appraisel-backend.onrender.com"
+  import.meta.env.VITE_API_BASE_URL || "/backend"
 ).replace(/\/+$/, "");
 
 const api = axios.create({

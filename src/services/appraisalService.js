@@ -81,8 +81,11 @@ const appraisalService = {
 };
 
 // Retrieve all appraisals
-export const getAppraisals = async () => {
-  const response = await api.get("/api/appraisels");
+// Search saved appraisals. No records are loaded or displayed until a search is submitted.
+export const getAppraisals = async (searchTerm) => {
+  const response = await api.get("/api/appraisels/search", {
+    params: { q: searchTerm },
+  });
   return response.data;
 };
 

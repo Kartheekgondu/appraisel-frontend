@@ -58,6 +58,7 @@ export default function AppraisalLetterPreview({
 
         <ul className="appraisal-details-list">
           <li>Employee Name: {form.employeeName || "[Employee Name]"}</li>
+          <li>Employee ID: {form.employeeId || "[Employee ID]"}</li>
           <li>Designation: {form.designation || "[Current Designation]"}</li>
           <li>Department: {form.department || "[Department Name]"}</li>
           <li>Current Annual CTC: ₹{money(form.currentCtc)} per annum</li>

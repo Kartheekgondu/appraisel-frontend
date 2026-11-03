@@ -1,23 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
-import appraisalService, { getAppraisals } from "../services/appraisalService";
+import { useEffect, useState } from "react";
+import appraisalService from "../services/appraisalService";
 import EmployeeDetails from "./EmployeeDetails";
 import AppraisalLetterPreview from "./AppraisalLetterPreview";
 import PdfDownloadButton from "./PdfDownloadButton";
 
-export default function AppraisalForm() {
-  const [form, setForm] = useState({
-    employeeName: "",
-    employeeEmail: "",
-    designation: "",
-    department: "",
-    currentCtc: "",
-    revisedCtc: "",
-    effectiveDate: "",
-    variablePay: "0",
-    employeePf: "0",
-    employerPf: "0",
-    professionalTax: "200",
-  });
+const emptyForm = {
+  employeeName: "", employeeId: "", employeeEmail: "", designation: "",
+  department: "", currentCtc: "", revisedCtc: "", effectiveDate: "",
+  variablePay: "0", employeePf: "0", employerPf: "0", professionalTax: "200",
+};
+
+export default function AppraisalForm({ selectedRecord, clearSelectedRecord }) {
+  const [form, setForm] = useState(emptyForm);
   const [isGenerated, setIsGenerated] = useState(false);
   const [error, setError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -25,36 +19,28 @@ export default function AppraisalForm() {
   const [emailMessage, setEmailMessage] = useState("");
   const [emailError, setEmailError] = useState("");
   const [savedAppraisalId, setSavedAppraisalId] = useState(null);
-  const [appraisals, setAppraisals] = useState([]);
-  const [isLoadingList, setIsLoadingList] = useState(true);
-  const [listError, setListError] = useState("");
-
-  const loadAppraisals = useCallback(async () => {
-    setIsLoadingList(true);
-    setListError("");
-    try {
-      const records = await getAppraisals();
-      setAppraisals(Array.isArray(records) ? records : []);
-    } catch (requestError) {
-      setListError(
-        requestError.response?.data?.message ||
-        "Could not load saved appraisals. Check the backend and database connection."
-      );
-    } finally {
-      setIsLoadingList(false);
-    }
-  }, []);
 
   useEffect(() => {
-    loadAppraisals();
-  }, [loadAppraisals]);
+    if (!selectedRecord) return;
+    setForm({
+      employeeName: selectedRecord.employeeName || "", employeeId: selectedRecord.employeeId || "",
+      employeeEmail: selectedRecord.employeeEmail || "", designation: selectedRecord.designation || "",
+      department: selectedRecord.department || "", currentCtc: String(selectedRecord.currentCtc ?? ""),
+      revisedCtc: String(selectedRecord.revisedCtc ?? ""), effectiveDate: selectedRecord.effectiveDate || "",
+      variablePay: String(selectedRecord.variablePay ?? 0), employeePf: String(selectedRecord.employeePf ?? 0),
+      employerPf: String(selectedRecord.employerPf ?? 0), professionalTax: String(selectedRecord.professionalTax ?? 200),
+    });
+    setSavedAppraisalId(selectedRecord.id);
+    setIsGenerated(true);
+    setError(""); setEmailMessage(""); setEmailError("");
+    clearSelectedRecord?.();
+  }, [selectedRecord, clearSelectedRecord]);
 
   const updateField = (name, value) => {
     setForm((previous) => {
       const next = { ...previous, [name]: value };
       if (name === "revisedCtc") {
-        const monthlyCtc = Math.max(0, Number(value) || 0) / 12;
-        const basic = monthlyCtc * 0.5;
+        const basic = Math.max(0, Number(value) || 0) / 12 * 0.5;
         const pf = basic >= 25000 ? 3000 : basic * 0.12;
         next.employeePf = String(pf);
         next.employerPf = String(pf);
@@ -63,199 +49,96 @@ export default function AppraisalForm() {
       return next;
     });
     setIsGenerated(false);
+    setSavedAppraisalId(null);
     setError("");
+    setEmailMessage("");
+    setEmailError("");
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     const current = Number(form.currentCtc);
     const revised = Number(form.revisedCtc);
-
     if (!form.employeeEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.employeeEmail)) {
-      setError("Enter a valid employee email address.");
-      return;
+      setError("Enter a valid employee email address."); return;
     }
     if (!Number.isFinite(current) || current <= 0) {
-      setError("Current Annual CTC must be greater than ₹0.");
-      return;
+      setError("Current Annual CTC must be greater than ₹0."); return;
     }
     if (!Number.isFinite(revised) || revised < 0) {
-      setError("Revised Annual CTC must be a valid non-negative amount.");
-      return;
+      setError("Revised Annual CTC must be a valid non-negative amount."); return;
     }
-
-    setError("");
-    setIsSaving(true);
+    setError(""); setIsSaving(true);
     try {
       const payload = {
-        ...form,
-        currentCtc: current,
-        revisedCtc: revised,
-        variablePay: Number(form.variablePay),
-        employeePf: Number(form.employeePf),
-        employerPf: Number(form.employerPf),
-        professionalTax: Number(form.professionalTax),
+        ...form, currentCtc: current, revisedCtc: revised,
+        variablePay: Number(form.variablePay), employeePf: Number(form.employeePf),
+        employerPf: Number(form.employerPf), professionalTax: Number(form.professionalTax),
       };
       const saved = await appraisalService.createAppraisal(payload);
       setSavedAppraisalId(saved.id);
-      setEmailMessage("");
-      setEmailError("");
       setIsGenerated(true);
-      await loadAppraisals();
-    } catch (requestError) {
-      setError(
-        requestError.response?.data?.message ||
-        requestError.response?.data?.error ||
-        "Could not save appraisal. Check that the backend and SQL database are running."
-      );
-    } finally {
-      setIsSaving(false);
-    }
+      setEmailMessage(""); setEmailError("");
+    } catch (err) {
+      setError(err.response?.data?.message || err.response?.data?.error ||
+        "Could not save appraisal. Check that the backend and SQL database are running.");
+    } finally { setIsSaving(false); }
   };
 
   const handleSendEmail = async () => {
-    if (!savedAppraisalId) {
-      setEmailError("Save the appraisal before sending the email.");
-      return;
-    }
-    setIsSendingEmail(true);
-    setEmailMessage("");
-    setEmailError("");
+    if (!savedAppraisalId) return;
+    setIsSendingEmail(true); setEmailMessage(""); setEmailError("");
     try {
       const result = await appraisalService.sendAppraisalEmail(savedAppraisalId);
       setEmailMessage(result.message || `Appraisal PDF sent to ${form.employeeEmail}.`);
-    } catch (requestError) {
-      setEmailError(
-        requestError.response?.data?.message ||
-        requestError.response?.data?.error ||
-        "Email could not be sent. Check the recipient address and backend SMTP settings."
-      );
-    } finally {
-      setIsSendingEmail(false);
-    }
+    } catch (err) {
+      setEmailError(err.response?.data?.message || err.response?.data?.error ||
+        "Email could not be sent. Check the recipient address and backend SMTP settings.");
+    } finally { setIsSendingEmail(false); }
   };
 
-  const incrementPercentage =
-    Number(form.currentCtc) > 0
-      ? ((Number(form.revisedCtc) - Number(form.currentCtc)) /
-          Number(form.currentCtc)) *
-        100
-      : 0;
+  const incrementPercentage = Number(form.currentCtc) > 0
+    ? ((Number(form.revisedCtc) - Number(form.currentCtc)) / Number(form.currentCtc)) * 100 : 0;
 
   return (
     <main className="appraisal-container">
-      {!isGenerated && (
-        <section className="form-card">
-          <h2>Employee Salary Revision</h2>
-          <p className="form-intro">
-            Fill in all employee and salary revision details, then select
-            Generate Appraisal Letter to view the completed letter.
-          </p>
+      <section className="form-card">
+        <form onSubmit={handleSubmit}>
+          <EmployeeDetails form={form} updateField={updateField} />
+          {error && <p className="form-error" role="alert">{error}</p>}
+          <button type="submit" className="generate-button" disabled={isSaving}>
+            {isSaving ? "Saving..." : "Generate Appraisal Letter"}
+          </button>
+        </form>
+      </section>
 
-          <form onSubmit={handleSubmit}>
-            <EmployeeDetails form={form} updateField={updateField} />
+      <div className="appraisal-actions">
+        <PdfDownloadButton appraisalId={savedAppraisalId} disabled={!isGenerated} />
+        <button type="button" className="action-button edit-button" disabled={!isGenerated}
+          onClick={() => { setIsGenerated(false); setSavedAppraisalId(null); }}>
+          <span aria-hidden="true">✎</span> Edit Letter
+        </button>
+        <button type="button" className="action-button email-send-button"
+          onClick={handleSendEmail} disabled={!isGenerated || isSendingEmail}>
+          <span aria-hidden="true">✉</span> {isSendingEmail ? "Sending..." : "Email Appraisal Letter"}
+        </button>
+      </div>
+      {emailMessage && <p className="email-success" role="status">{emailMessage}</p>}
+      {emailError && <p className="form-error" role="alert">{emailError}</p>}
 
-            {error && (
-              <p className="form-error" role="alert">
-                {error}
-              </p>
-            )}
-
-            <button type="submit" className="generate-button" disabled={isSaving}>
-              {isSaving ? "Saving..." : "Generate Appraisal Letter"}
-            </button>
-          </form>
-        </section>
-      )}
-
-      {isGenerated && (
+      {isGenerated ? (
         <section className="generated-result">
           <div className="result-toolbar">
-            <div>
-              <h2>Appraisal Letter Generated</h2>
-              <p>
-                Increment Percentage:{" "}
-                <strong>{incrementPercentage.toFixed(2)}%</strong>
-              </p>
+            <div><h2>Appraisal Letter Generated</h2>
+              <p>Increment Percentage: <strong>{incrementPercentage.toFixed(2)}%</strong></p>
             </div>
-
-            <button
-              type="button"
-              className="edit-button"
-              onClick={() => setIsGenerated(false)}
-            >
-              Edit Details
-            </button>
           </div>
-
-          <AppraisalLetterPreview
-            form={form}
-            incrementPercentage={incrementPercentage}
-            salarySettings={form}
-          />
-
-          <div className="appraisal-actions">
-            <PdfDownloadButton appraisalId={savedAppraisalId} />
-            <button
-              type="button"
-              className="download-button email-send-button"
-              onClick={handleSendEmail}
-              disabled={isSendingEmail}
-            >
-              {isSendingEmail ? "Sending Email..." : "Send Appraisal by Email"}
-            </button>
-          </div>
-          {emailMessage && <p className="email-success" role="status">{emailMessage}</p>}
-          {emailError && <p className="form-error" role="alert">{emailError}</p>}
+          <AppraisalLetterPreview form={form} incrementPercentage={incrementPercentage} salarySettings={form} />
         </section>
+      ) : (
+        <p className="empty-letter-message">No letter generated yet. Fill in the form and click "Generate Appraisal Letter".</p>
       )}
 
-      {!isGenerated && <section className="saved-appraisals" aria-labelledby="saved-appraisals-heading">
-        <div className="saved-appraisals-heading">
-          <div>
-            <h2 id="saved-appraisals-heading">Saved Appraisal Records</h2>
-            <p>Records retrieved from your MySQL database.</p>
-          </div>
-          <button type="button" className="refresh-button" onClick={loadAppraisals} disabled={isLoadingList}>
-            {isLoadingList ? "Loading..." : "Refresh"}
-          </button>
-        </div>
-
-        {listError && <p className="form-error" role="alert">{listError}</p>}
-        {isLoadingList ? (
-          <p className="list-message">Loading appraisal records...</p>
-        ) : appraisals.length === 0 ? (
-          <p className="list-message">No appraisal records found. Generate and save an appraisal to see it here.</p>
-        ) : (
-          <div className="table-scroll">
-            <table className="saved-appraisals-table">
-              <thead>
-                <tr>
-                  <th>ID</th><th>Employee</th><th>Designation</th><th>Department</th>
-                  <th>Current CTC (₹)</th><th>Revised CTC (₹)</th><th>Increment</th><th>Effective Date</th><th>PDF</th>
-                </tr>
-              </thead>
-              <tbody>
-                {appraisals.map((record) => {
-                  const current = Number(record.currentCtc || 0);
-                  const revised = Number(record.revisedCtc || 0);
-                  const increment = current > 0 ? ((revised - current) / current) * 100 : 0;
-                  const money = (value) => Number(value || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 });
-                  return (
-                    <tr key={record.id}>
-                      <td>{record.id}</td><td>{record.employeeName}</td><td>{record.designation}</td>
-                      <td>{record.department}</td><td>{money(current)}</td><td>{money(revised)}</td>
-                      <td>{increment.toFixed(2)}%</td><td>{record.effectiveDate || "—"}</td>
-                      <td><button type="button" className="table-download-button" onClick={() => appraisalService.downloadPdf(record.id)}>Download</button></td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>}
     </main>
   );
 }

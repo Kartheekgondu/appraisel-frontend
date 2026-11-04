@@ -69,8 +69,8 @@ export default function AppraisalForm({ selectedRecord, clearSelectedRecord }) {
     if (!Number.isFinite(current) || current <= 0) {
       setError("Current Annual CTC must be greater than ₹0."); return;
     }
-    if (!Number.isFinite(revised) || revised < 0) {
-      setError("Revised Annual CTC must be a valid non-negative amount."); return;
+    if (!Number.isFinite(revised) || revised <= current) {
+      setError("Revised Annual CTC must be greater than Current Annual CTC."); return;
     }
     setError(""); setIsSaving(true);
     try {

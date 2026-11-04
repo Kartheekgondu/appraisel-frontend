@@ -33,7 +33,7 @@ export default function EmployeeDetails({ form, updateField }) {
                 value = value.replace(/[^A-Za-z ]/g, "").replace(/^ +/, "").replace(/ +/g, " ");
               }
               if (name === "employeeId") {
-                value = value.replace(/[^A-Za-z0-9]/g, "");
+                value = value.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
               }
               if (name === "designation" || name === "department") {
                 // Letters and single spaces only; capitalize the first letter of each word.
@@ -44,24 +44,24 @@ export default function EmployeeDetails({ form, updateField }) {
             }}
             pattern={
               name === "employeeName"
-                ? "(?!([A-Za-z])\\1+$)[A-Za-z]{2,}( [A-Za-z]+)*"
+                ? "[A-Za-z]{2,}( [A-Za-z]+)*"
                 : (name === "employeeId"
-                    ? "(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{2,}"
+                    ? "(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]{2,}"
                     : (name === "designation" || name === "department"
-                    ? "(?!.*([A-Za-z])\\1{2})[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*"
+                    ? "[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*"
                     : (type === "text" || type === "email"
-                    ? "(?!([\\s\\S])\\1+$)[\\s\\S]{2,}"
+                    ? "[\\s\\S]{2,}"
                     : undefined)))
             }
             title={
               name === "employeeName"
-                ? "Enter a name with at least 2 characters; repeated identical characters are not allowed."
+                ? "Enter a name with at least 2 English letters."
                 : (name === "employeeId"
-                    ? "Employee ID must contain at least one letter and one number; only letters and numbers are allowed."
+                    ? "Employee ID must contain uppercase letters and numbers only, including at least one of each."
                     : (name === "designation" || name === "department"
                     ? "Use alphabets only; capitalize the first letter of each word."
                     : (type === "text" || type === "email"
-                    ? "Enter at least 2 characters; repeated identical characters are not allowed."
+                    ? "Enter at least 2 characters."
                     : undefined)))
             }
             maxLength={name === "employeeEmail" ? 100 : (type === "text" ? 60 : undefined)}

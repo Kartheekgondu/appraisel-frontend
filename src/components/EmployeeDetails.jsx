@@ -23,20 +23,48 @@ export default function EmployeeDetails({ form, updateField }) {
             type={type}
             name={name}
             value={form[name] ?? ""}
-            min={type === "number" ? (name === "currentCtc" ? 1 : 0) : undefined}
             step={type === "number" ? "0.01" : undefined}
+            min={type === "date" ? `${new Date().getFullYear()}-01-01` : (type === "number" ? (name === "currentCtc" ? 1 : 0) : undefined)}
+            max={type === "date" ? `${new Date().getFullYear()}-12-31` : undefined}
             onChange={(event) => {
               let value = event.target.value;
               if (name === "employeeName") {
                 // Keep English letters and at most one space between words.
-                // Controlled input still allows Backspace and Delete normally.
                 value = value.replace(/[^A-Za-z ]/g, "").replace(/^ +/, "").replace(/ +/g, " ");
+              }
+              if (name === "employeeId") {
+                value = value.replace(/[^A-Za-z0-9]/g, "");
+              }
+              if (name === "designation" || name === "department") {
+                // Letters and single spaces only; capitalize the first letter of each word.
+                value = value.replace(/[^A-Za-z ]/g, "").replace(/^ +/, "").replace(/ +/g, " ");
+                value = value.replace(/(^| )([a-z])/g, (_, prefix, letter) => prefix + letter.toUpperCase());
               }
               updateField(name, value);
             }}
-            pattern={name === "employeeName" ? "[A-Za-z]+( [A-Za-z]+)*" : undefined}
-            title={name === "employeeName" ? "Start with an English letter; use only one space between words." : undefined}
-            maxLength={name === "employeeName" ? 100 : undefined}
+            pattern={
+              name === "employeeName"
+                ? "(?!([A-Za-z])\\1+$)[A-Za-z]{2,}( [A-Za-z]+)*"
+                : (name === "employeeId"
+                    ? "(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{2,}"
+                    : (name === "designation" || name === "department"
+                    ? "(?!.*([A-Za-z])\\1{2})[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*"
+                    : (type === "text" || type === "email"
+                    ? "(?!([\\s\\S])\\1+$)[\\s\\S]{2,}"
+                    : undefined)))
+            }
+            title={
+              name === "employeeName"
+                ? "Enter a name with at least 2 characters; repeated identical characters are not allowed."
+                : (name === "employeeId"
+                    ? "Employee ID must contain at least one letter and one number; only letters and numbers are allowed."
+                    : (name === "designation" || name === "department"
+                    ? "Use alphabets only; capitalize the first letter of each word."
+                    : (type === "text" || type === "email"
+                    ? "Enter at least 2 characters; repeated identical characters are not allowed."
+                    : undefined)))
+            }
+            maxLength={name === "employeeEmail" ? 100 : (type === "text" ? 60 : undefined)}
             readOnly={["employeePf", "employerPf", "professionalTax"].includes(name)}
             required
           />

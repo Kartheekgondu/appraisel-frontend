@@ -14,6 +14,9 @@ export default function Header({ searchTerm, setSearchTerm, onSearch, results = 
             <input
               id="previous-search"
               type="search"
+              maxLength={60}
+              pattern="(?!([\\s\\S])\\1+$)[\\s\\S]{2,}"
+              title="Enter at least 2 characters; repeated identical characters are not allowed."
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
               placeholder="Search by employee name or ID"

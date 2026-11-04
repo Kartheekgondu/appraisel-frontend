@@ -59,6 +59,10 @@ export default function AppraisalForm({ selectedRecord, clearSelectedRecord }) {
     event.preventDefault();
     const current = Number(form.currentCtc);
     const revised = Number(form.revisedCtc);
+    const employeeName = form.employeeName.trim();
+    if (!/^[A-Za-z]+(?: [A-Za-z]+)*$/.test(employeeName)) {
+      setError("Employee Name must start with an English letter; use single spaces only between names."); return;
+    }
     if (!form.employeeEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.employeeEmail)) {
       setError("Enter a valid employee email address."); return;
     }
@@ -71,7 +75,7 @@ export default function AppraisalForm({ selectedRecord, clearSelectedRecord }) {
     setError(""); setIsSaving(true);
     try {
       const payload = {
-        ...form, currentCtc: current, revisedCtc: revised,
+        ...form, employeeName, currentCtc: current, revisedCtc: revised,
         variablePay: Number(form.variablePay), employeePf: Number(form.employeePf),
         employerPf: Number(form.employerPf), professionalTax: Number(form.professionalTax),
       };

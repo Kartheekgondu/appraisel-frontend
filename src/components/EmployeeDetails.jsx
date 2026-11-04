@@ -25,7 +25,15 @@ export default function EmployeeDetails({ form, updateField }) {
             value={form[name] ?? ""}
             min={type === "number" ? (name === "currentCtc" ? 1 : 0) : undefined}
             step={type === "number" ? "0.01" : undefined}
-            onChange={(event) => updateField(name, event.target.value)}
+            onChange={(event) => {
+              const value = event.target.value;
+              // Employee names start with a letter; spaces are allowed only after the first letter.
+              if (name === "employeeName" && !/^(?! )[A-Za-z ]*$/.test(value)) return;
+              updateField(name, value);
+            }}
+            pattern={name === "employeeName" ? "[A-Za-z]+(?: [A-Za-z]+)*" : undefined}
+            title={name === "employeeName" ? "Start with an English letter; spaces are allowed between names." : undefined}
+            maxLength={name === "employeeName" ? 100 : undefined}
             readOnly={["employeePf", "employerPf", "professionalTax"].includes(name)}
             required
           />

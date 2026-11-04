@@ -26,13 +26,16 @@ export default function EmployeeDetails({ form, updateField }) {
             min={type === "number" ? (name === "currentCtc" ? 1 : 0) : undefined}
             step={type === "number" ? "0.01" : undefined}
             onChange={(event) => {
-              const value = event.target.value;
-              // Employee names start with a letter; spaces are allowed only after the first letter.
-              if (name === "employeeName" && !/^(?! )[A-Za-z ]*$/.test(value)) return;
+              let value = event.target.value;
+              if (name === "employeeName") {
+                // Keep English letters and at most one space between words.
+                // Controlled input still allows Backspace and Delete normally.
+                value = value.replace(/[^A-Za-z ]/g, "").replace(/^ +/, "").replace(/ +/g, " ");
+              }
               updateField(name, value);
             }}
-            pattern={name === "employeeName" ? "[A-Za-z]+(?: [A-Za-z]+)*" : undefined}
-            title={name === "employeeName" ? "Start with an English letter; spaces are allowed between names." : undefined}
+            pattern={name === "employeeName" ? "[A-Za-z]+( [A-Za-z]+)*" : undefined}
+            title={name === "employeeName" ? "Start with an English letter; use only one space between words." : undefined}
             maxLength={name === "employeeName" ? 100 : undefined}
             readOnly={["employeePf", "employerPf", "professionalTax"].includes(name)}
             required

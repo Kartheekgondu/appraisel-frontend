@@ -61,7 +61,7 @@ export default function AppraisalForm({ selectedRecord, clearSelectedRecord }) {
     const revised = Number(form.revisedCtc);
     const employeeName = form.employeeName.trim();
     if (!/^[A-Za-z]+(?: [A-Za-z]+)*$/.test(employeeName)) {
-      setError("Employee Name must start with an English letter; use single spaces only between names."); return;
+      setError("Employee Name must start with an English letter and contain at most one space between words."); return;
     }
     if (!form.employeeEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.employeeEmail)) {
       setError("Enter a valid employee email address."); return;

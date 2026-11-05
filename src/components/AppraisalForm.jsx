@@ -130,26 +130,20 @@ export default function AppraisalForm({ selectedRecord, clearSelectedRecord }) {
           {emailMessage && <p className="email-success" role="status">{emailMessage}</p>}
           {emailError && <p className="form-error" role="alert">{emailError}</p>}
         </section>
-        <section className="preview-card">
-          <div className="panel-heading preview-heading">
-            <span className="panel-icon">▤</span><h2>Appraisal Letter Preview</h2>
-            <span className="preview-status">{isGenerated ? "Generated" : "Live preview"}</span>
-          </div>
-          {isGenerated ? (
+        {isGenerated && (
+          <section className="preview-card">
+            <div className="panel-heading preview-heading">
+              <span className="panel-icon">▤</span><h2>Appraisal Letter Preview</h2>
+              <span className="preview-status">Generated</span>
+            </div>
             <div className="generated-result">
               <div className="result-toolbar">
                 <p>Increment Percentage: <strong>{incrementPercentage.toFixed(2)}%</strong></p>
               </div>
               <AppraisalLetterPreview form={form} incrementPercentage={incrementPercentage} salarySettings={form} />
             </div>
-          ) : (
-            <div className="preview-placeholder">
-              <div className="placeholder-icon">▤</div>
-              <h3>Your appraisal letter will appear here</h3>
-              <p>Complete the employee details and select Generate Appraisal Letter to create the letter preview.</p>
-            </div>
-          )}
-        </section>
+          </section>
+        )}
       </div>
     </main>
   );

@@ -1,1 +1,36 @@
  :root{font-family:Arial,Helvetica,sans-serif;color:#14233d;background:#f3f6fb;font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}*{box-sizing:border-box}html,body,#root{min-height:100%;margin:0;width:100%}body{min-width:320px;background:#f3f6fb}button,input{font:inherit}h1,h2,h3,h4,p{margin-top:0}
+
+/* Typography update: Times New Roman, 14px headings, 12px body */
+:root,
+html,
+body,
+#root,
+button,
+input,
+select,
+textarea {
+  font-family: "Times New Roman", Times, serif !important;
+}
+body,
+.app,
+.app p,
+.app label,
+.app input,
+.app select,
+.app textarea,
+.app button,
+.app li,
+.app td,
+.app th {
+  font-size: 12px;
+}
+.app h1,
+.app h2,
+.app h3,
+.app h4,
+.page-heading h1,
+.panel-heading h2 {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 14px !important;
+  line-height: 1.3;
+}

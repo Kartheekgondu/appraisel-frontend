@@ -183,3 +183,38 @@
     height: 52px;
   }
 }
+
+/* Typography update: Times New Roman, 14px headings, 12px body */
+:root,
+html,
+body,
+#root,
+button,
+input,
+select,
+textarea {
+  font-family: "Times New Roman", Times, serif !important;
+}
+body,
+.app,
+.app p,
+.app label,
+.app input,
+.app select,
+.app textarea,
+.app button,
+.app li,
+.app td,
+.app th {
+  font-size: 12px;
+}
+.app h1,
+.app h2,
+.app h3,
+.app h4,
+.page-heading h1,
+.panel-heading h2 {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 14px !important;
+  line-height: 1.3;
+}

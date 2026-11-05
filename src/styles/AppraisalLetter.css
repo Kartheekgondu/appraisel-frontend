@@ -837,3 +837,70 @@
     display: none !important;
   }
 }
+
+/* Appraisal letter typography: Times New Roman; 14pt headings and 12pt body */
+#appraisal-letter,
+#appraisal-letter .letter-page,
+#appraisal-letter .letter-page *,
+.letter-preview,
+.letter-preview * {
+  font-family: "Times New Roman", Times, serif !important;
+}
+#appraisal-letter .letter-page,
+.letter-preview {
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+}
+#appraisal-letter p,
+#appraisal-letter li,
+#appraisal-letter td,
+#appraisal-letter th,
+#appraisal-letter .company-gst,
+.letter-preview p,
+.letter-preview li,
+.letter-preview td,
+.letter-preview th {
+  font-size: 12px !important;
+}
+#appraisal-letter .letter-title,
+#appraisal-letter h1,
+#appraisal-letter h2,
+#appraisal-letter h3,
+#appraisal-letter h4,
+.letter-preview .letter-title,
+.letter-preview h1,
+.letter-preview h2,
+.letter-preview h3,
+.letter-preview h4 {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+}
+#appraisal-letter .salary-structure table {
+  font-size: 12px !important;
+}
+#appraisal-letter .salary-structure th,
+#appraisal-letter .salary-structure td {
+  font-size: 12px !important;
+}
+@media print {
+  #appraisal-letter .letter-page,
+  .letter-preview {
+    font-family: "Times New Roman", Times, serif !important;
+    font-size: 12pt !important;
+    line-height: 1.4 !important;
+  }
+  #appraisal-letter p,
+  #appraisal-letter li,
+  #appraisal-letter td,
+  #appraisal-letter th {
+    font-size: 12pt !important;
+  }
+  #appraisal-letter .letter-title,
+  #appraisal-letter h1,
+  #appraisal-letter h2,
+  #appraisal-letter h3,
+  #appraisal-letter h4 {
+    font-size: 14pt !important;
+  }
+}

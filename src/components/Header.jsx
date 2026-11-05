@@ -34,7 +34,7 @@ export default function Header({ searchTerm, setSearchTerm, onSearch, results = 
         )}
       </div>
       <div className="page-heading">
-        <h1>Appraisal Letter Generator</h1>
+        <h1>Appraisal Letter Form</h1>
         <p>Generate, store and send employee appraisal letters</p>
       </div>
     </header>

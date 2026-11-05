@@ -1,69 +1,185 @@
-* { box-sizing: border-box; }
-#root { width: 100%; max-width: none; margin: 0; text-align: left; }
-.app { min-height: 100vh; padding: 44px 0 48px; background: #f5f5f5; }
-.page-header, .appraisal-container { width: min(1528px, calc(100% - 64px)); margin-left: auto; margin-right: auto; }
-.page-header { min-height: 253px; position: relative; }
-.brand-area { position: absolute; left: 0; top: 0; }
-.company-logo { width: 88px; height: 100px; object-fit: contain; }
-.header-search { position: absolute; top: 10px; right: 8%; width: min(755px, 58%); z-index: 5; }
-.header-search > label { display: block; margin-bottom: 9px; color: #536477; font-size: 16px; font-weight: 700; }
-.header-search form { display: flex; gap: 14px; align-items: center; }
-.search-input-wrap { height: 46px; flex: 1; display: flex; align-items: center; gap: 12px; padding: 0 20px; border: 1px solid #d0d5dd; border-radius: 26px; background: #fff; }
-.search-icon { color: #98a2b3; font-size: 30px; line-height: 1; transform: rotate(-20deg); }
-.search-input-wrap input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; font-size: 16px; }
-.search-button, .generate-button { border: 0; border-radius: 24px; background: #3d5ee8; color: #fff; font-weight: 700; cursor: pointer; }
-.search-button { min-width: 100px; height: 46px; padding: 0 25px; }
-.page-heading { position: absolute; left: 0; top: 138px; }
-.page-heading h1 { margin: 0 0 10px; font-size: 36px; line-height: 1.2; font-weight: 700; letter-spacing: .1px; background: linear-gradient(90deg,#e23a8e 0%,#7b4de0 55%,#2e9de0 100%); color: transparent; background-clip: text; -webkit-background-clip: text; }
-.page-heading p { margin: 0; color: #64748b; font-size: 20px; }
-.appraisal-container { padding: 0; background: transparent; }
-.form-card { width: 100%; padding: 40px 40px 24px; border: 1px solid #e7e9ee; border-radius: 21px; background: #fff; box-shadow: 0 1px 3px rgba(16,24,40,.10); }
-.form-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); column-gap: 34px; row-gap: 42px; }
-.form-field { display: flex; min-width: 0; flex-direction: column; gap: 11px; }
-.form-field span { color: #111; font-size: 20px; font-weight: 700; line-height: 1.2; }
-.form-field input { width: 100%; height: 60px; padding: 0 20px; border: 1px solid #cfd5df; border-radius: 13px; background: #fff; color: #111827; font-size: 18px; outline: none; }
-.form-field input:focus { border-color: #4564e8; box-shadow: 0 0 0 3px rgba(69,100,232,.12); }
-.form-field input[readonly] { background: #f0f0f0; color: #64748b; }
-.generate-button { display: block; min-height: 45px; margin: 40px auto 0; padding: 0 24px; border-radius: 12px; font-size: 15px; }
-.generate-button:disabled { opacity: .65; cursor: wait; }
-.appraisal-actions { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 9px; margin: 40px auto 30px; }
-.action-button, .appraisal-actions .download-button { min-height: 40px; margin: 0; padding: 0 16px; border: 0; border-radius: 9px; background: #4b5fe8; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; }
-.appraisal-actions button:disabled { background: #c6c9f5; color: #fff; cursor: not-allowed; opacity: 1; }
-.appraisal-actions .download-button { background: #4b5fe8; }
-.appraisal-actions .download-button:disabled { background: #c6c9f5; }
-.empty-letter-message { margin: 34px 8px; color: #596579; font-size: 21px; font-style: italic; }
-.form-error, .search-feedback { color: #b42318; background: #fff1f0; padding: 10px 12px; border-radius: 7px; }
-.search-feedback { width: min(1528px,calc(100% - 64px)); margin: -10px auto 14px; }
-.search-results { position: absolute; top: 78px; left: 0; right: 115px; max-height: 280px; overflow-y: auto; border: 1px solid #e1e5ec; border-radius: 12px; background: #fff; box-shadow: 0 8px 22px rgba(0,0,0,.12); }
-.search-results button { display: flex; width: 100%; flex-direction: column; gap: 3px; padding: 12px 16px; border: 0; border-bottom: 1px solid #edf0f4; background: #fff; text-align: left; cursor: pointer; }
-.search-results button:hover { background: #f7f8ff; }
-.search-results span { color: #667085; font-size: 13px; }
-.result-toolbar { display: flex; justify-content: space-between; align-items: center; }
-.result-toolbar h2 { margin: 0 0 5px; color: #244c80; }
-.result-toolbar p { color: #667085; }
-.email-success { color: #067647; background: #ecfdf3; padding: 10px 12px; border-radius: 7px; }
-@media (max-width: 1050px) {
-  .page-header, .appraisal-container { width: min(100% - 40px, 900px); }
-  .header-search { right: 0; width: 65%; }
-  .form-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .form-card { padding: 30px; }
+*{box-sizing:border-box}
+#root{width:100%;max-width:none;margin:0;text-align:left}
+.app{min-height:100vh;padding:22px 24px 36px;background:#f3f6fb;color:#14233d}
+.page-header,.appraisal-container{width:100%;max-width:1600px;margin:0 auto}
+.page-header{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 4px 18px;border-bottom:1px solid #e2e9f3;margin-bottom:16px}
+.brand-area{display:none}
+.page-heading{order:0;position:static;min-width:300px}
+.page-heading h1{margin:0 0 4px;color:#102b54;font-size:28px;line-height:1.2;font-weight:800;letter-spacing:-.5px;background:none}
+.page-heading p{margin:0;color:#526783;font-size:14px}
+.header-search{position:relative;top:auto;right:auto;width:min(560px,52%);z-index:5}
+.header-search>label{display:none}
+.header-search form{display:flex;gap:10px;align-items:center}
+.search-input-wrap{height:42px;flex:1;display:flex;align-items:center;gap:10px;padding:0 15px;border:1px solid #dce5f1;border-radius:24px;background:#fff;box-shadow:0 2px 8px rgba(20,50,90,.04)}
+.search-icon{color:#526783;font-size:22px;line-height:1}
+.search-input-wrap input{width:100%;min-width:0;padding:0;border:0;outline:0;background:transparent;font-size:13px}
+.search-button,.generate-button{border:0;border-radius:9px;background:#075bea;color:#fff;font-weight:700;cursor:pointer}
+.search-button{min-width:96px;height:42px;padding:0 20px;box-shadow:0 4px 10px rgba(0,83,220,.18)}
+.workspace-grid{display:grid;grid-template-columns:minmax(520px,1.02fr) minmax(560px,1fr);gap:14px;align-items:start}
+.form-card,.preview-card{min-width:0;overflow:hidden;border:1px solid #dce5f1;border-radius:12px;background:#fff;box-shadow:0 4px 14px rgba(19,48,85,.08)}
+.panel-heading{min-height:50px;display:flex;align-items:center;gap:12px;padding:0 18px;background:linear-gradient(105deg,#123d78,#174f91);color:#fff}
+.panel-heading h2{margin:0;font-size:17px;font-weight:750;letter-spacing:-.1px}
+.panel-icon{font-size:22px;line-height:1}
+.form-card form{padding:20px 18px 14px}
+.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:12px;row-gap:20px}
+.form-field{display:flex;min-width:0;flex-direction:column;gap:7px}
+.form-field span{color:#172033;font-size:12px;font-weight:700;line-height:1.25}
+.form-field span:after{content:" *";color:#e53935}
+.form-field input{width:100%;height:38px;min-width:0;padding:0 10px;border:1px solid #d6e0ed;border-radius:7px;background:#fff;color:#182b49;font-size:12px;outline:none;transition:border-color .15s,box-shadow .15s}
+.form-field input:focus{border-color:#1765dc;box-shadow:0 0 0 3px rgba(23,101,220,.1)}
+.form-field input[readonly]{background:#f1f4f8;color:#526783}
+.appraisal-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:22px 0 0;padding-top:16px;border-top:1px solid #e5ebf3}
+.generate-button,.action-button,.appraisal-actions .download-button{min-height:42px;margin:0;padding:0 13px;border:1px solid #c8daf7;border-radius:8px;background:#edf4ff;color:#075bea;font-size:12px;font-weight:700;cursor:pointer}
+.generate-button{background:#075bea;color:#fff;border-color:#075bea}
+.action-button:disabled,.appraisal-actions button:disabled{opacity:.48;cursor:not-allowed}
+.appraisal-actions .download-button{background:#edf4ff;color:#075bea}
+.preview-heading{gap:12px}
+.preview-status{margin-left:auto;padding:5px 9px;border:1px solid rgba(255,255,255,.28);border-radius:20px;color:#e7f0ff;font-size:10px}
+.generated-result{padding:12px;background:#f7f9fc}
+.result-toolbar{display:flex;justify-content:flex-end;align-items:center;margin:0 4px 8px}
+.result-toolbar p{margin:0;color:#526783;font-size:12px}
+.letter-preview,#appraisal-letter .letter-page{box-sizing:border-box;width:100%;max-width:100%;min-height:980px;margin:0 auto 12px;padding:28px 30px 22px;background:#fff;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.42;border:1px solid #e2e8f0;border-radius:4px;text-align:left;box-shadow:0 2px 8px rgba(20,40,70,.08)}
+#appraisal-letter{width:100%;max-width:none;margin:0;padding:0;background:transparent}
+#appraisal-letter .letter-page{display:flex;flex-direction:column}
+#appraisal-letter .letter-brand-row{display:flex!important;align-items:center!important;justify-content:flex-start!important;min-height:48px!important;height:48px!important;margin:0 0 12px!important;padding:0!important}
+#appraisal-letter .letter-brand-row img.company-logo{width:auto!important;height:auto!important;max-width:170px!important;max-height:45px!important;object-fit:contain!important}
+#appraisal-letter .letter-title{margin:0 0 18px!important;color:#075bea!important;font-size:13px!important;font-weight:700!important;text-align:center!important;text-decoration:none!important}
+#appraisal-letter p{margin:8px 0;color:#111827;font-size:11px;line-height:1.42;text-align:left}
+#appraisal-letter h4{margin:14px 0 8px;font-size:11px;color:#14233d}
+#appraisal-letter .appraisal-details-list{margin:8px 0 14px;padding-left:22px;line-height:1.35}
+#appraisal-letter .appraisal-details-list li{margin:2px 0}
+#appraisal-letter .salary-structure{width:100%;margin:12px 0 14px;padding:0;break-inside:avoid}
+#appraisal-letter .salary-structure table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:10px;color:#172033}
+#appraisal-letter .salary-structure th,#appraisal-letter .salary-structure td{padding:5px 7px;border:1px solid #c6d3e3;text-align:right;vertical-align:middle;overflow-wrap:anywhere}
+#appraisal-letter .salary-structure th:first-child,#appraisal-letter .salary-structure td:first-child{text-align:left;width:43%}
+#appraisal-letter .salary-structure thead th{background:#e4efff!important;color:#102b54;text-align:center}
+#appraisal-letter .salary-structure .total-row th,#appraisal-letter .salary-structure .total-row td{background:#e7f0ff;font-weight:700}
+#appraisal-letter .salary-structure .section-row th{background:#ffe8e5;text-align:left;color:#a52820}
+#appraisal-letter .salary-structure .take-home-row th{background:#fff2d6;font-weight:700}
+#appraisal-letter .company-gst{margin-top:auto!important;padding-top:8px!important;border-top:1px solid #9bb9e8;color:#174f91!important;text-align:center!important;font-size:10px!important;font-weight:700}
+#appraisal-letter .letter-signoff{margin-top:16px}
+#appraisal-letter .signature-stamp-image{max-width:150px;max-height:70px;object-fit:contain}
+.preview-placeholder{min-height:600px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;color:#62738a}
+.placeholder-icon{display:grid;place-items:center;width:66px;height:66px;margin-bottom:16px;border-radius:18px;background:#edf4ff;color:#075bea;font-size:32px}
+.preview-placeholder h3{margin:0 0 8px;color:#18375f;font-size:17px}
+.preview-placeholder p{max-width:340px;margin:0;font-size:13px;line-height:1.6}
+.form-error,.search-feedback{color:#b42318;background:#fff1f0;padding:10px 12px;border-radius:7px;font-size:12px}
+.search-feedback{width:100%;margin:0 auto 12px}
+.search-results{position:absolute;top:50px;left:0;right:105px;max-height:280px;overflow-y:auto;border:1px solid #e1e5ec;border-radius:12px;background:#fff;box-shadow:0 8px 22px rgba(0,0,0,.12)}
+.search-results button{display:flex;width:100%;flex-direction:column;gap:3px;padding:12px 16px;border:0;border-bottom:1px solid #edf0f4;background:#fff;text-align:left;cursor:pointer}
+.search-results button:hover{background:#f2f6ff}
+.search-results span{color:#667085;font-size:12px}
+.email-success{color:#067647;background:#ecfdf3;padding:10px 12px;border-radius:7px;font-size:12px}
+@media(max-width:1200px){.workspace-grid{grid-template-columns:minmax(0,1fr)}.preview-card{margin-top:2px}.letter-preview,#appraisal-letter .letter-page{max-width:794px}.form-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.app{padding:14px 12px 24px}.page-header{align-items:stretch;flex-direction:column;gap:12px;padding-bottom:14px}.page-heading{min-width:0}.page-heading h1{font-size:23px}.header-search{width:100%}.workspace-grid{grid-template-columns:minmax(0,1fr)}.form-card form{padding:16px 13px}.form-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 10px}.form-field span{font-size:11px}.form-field input{height:36px;font-size:12px}.panel-heading{padding:0 13px}.panel-heading h2{font-size:15px}.appraisal-actions{gap:7px}.generate-button,.action-button,.appraisal-actions .download-button{flex:1 1 45%;justify-content:center;padding:0 8px;font-size:11px}.generated-result{padding:7px}.letter-preview,#appraisal-letter .letter-page{min-height:0;padding:22px 16px;font-size:10px}.preview-placeholder{min-height:350px;padding:28px 18px}}
+@media(max-width:420px){.form-grid{grid-template-columns:1fr}.search-button{min-width:75px;padding:0 12px}.page-heading h1{font-size:21px}}
+@media print{@page{size:A4;margin:0}html,body,#root{width:100%;margin:0;padding:0;background:#fff!important}body *{visibility:hidden}#appraisal-letter,#appraisal-letter *{visibility:visible}#appraisal-letter{position:absolute;top:0;left:0;width:100%;padding:0;margin:0}#appraisal-letter .letter-page{width:100%;height:10.69in;min-height:10.69in;margin:0;padding:34px 40px 24px;border:0;border-radius:0;box-shadow:none;break-after:page;page-break-after:always;font-size:10pt}#appraisal-letter .letter-page:last-child{break-after:auto;page-break-after:auto}#appraisal-letter p{font-size:10pt}.form-card,.preview-heading,.page-header,.appraisal-actions,.result-toolbar{display:none!important}}
+
+/* UX Interfacely header + full-width stacked appraisal workspace */
+.page-header {
+  display: grid;
+  grid-template-columns: 148px minmax(260px, 1fr) minmax(340px, 520px);
+  grid-template-areas: "brand heading search";
+  align-items: center;
+  gap: 22px;
+  min-height: 92px;
+  padding: 8px 4px 16px;
 }
-@media (max-width: 640px) {
-  .app { padding-top: 22px; }
-  .page-header, .appraisal-container { width: calc(100% - 28px); }
-  .page-header { min-height: 275px; }
-  .brand-area { top: 0; }
-  .company-logo { width: 72px; height: 78px; }
-  .header-search { top: 90px; left: 0; width: 100%; }
-  .header-search form { gap: 8px; }
-  .search-button { min-width: 78px; padding: 0 14px; }
-  .page-heading { top: 188px; }
-  .page-heading h1 { font-size: 27px; }
-  .page-heading p { font-size: 16px; }
-  .form-card { padding: 24px 18px; border-radius: 15px; }
-  .form-grid { grid-template-columns: 1fr; row-gap: 20px; }
-  .form-field span { font-size: 17px; }
-  .form-field input { height: 52px; font-size: 16px; }
-  .generate-button { margin-top: 28px; }
-  .empty-letter-message { font-size: 17px; }
+.brand-area {
+  grid-area: brand;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+}
+.brand-area .company-logo {
+  display: block;
+  width: 136px;
+  height: 76px;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left center;
+}
+.page-heading {
+  grid-area: heading;
+  min-width: 0;
+}
+.header-search {
+  grid-area: search;
+  width: 100%;
+  min-width: 0;
+}
+.workspace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  align-items: stretch;
+}
+.form-card,
+.preview-card {
+  width: 100%;
+}
+.form-card form {
+  padding: 22px 20px 16px;
+}
+.form-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.preview-card {
+  margin-top: 0;
+}
+.preview-placeholder {
+  min-height: 460px;
+}
+@media (max-width: 1000px) {
+  .page-header {
+    grid-template-columns: 112px minmax(0, 1fr);
+    grid-template-areas:
+      "brand heading"
+      "search search";
+    gap: 10px 16px;
+  }
+  .brand-area .company-logo {
+    width: 108px;
+    height: 66px;
+  }
+  .header-search {
+    width: 100%;
+  }
+  .form-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  .page-header {
+    grid-template-columns: 82px minmax(0, 1fr);
+    grid-template-areas:
+      "brand heading"
+      "search search";
+    align-items: center;
+    padding-bottom: 14px;
+  }
+  .brand-area .company-logo {
+    width: 80px;
+    height: 58px;
+  }
+  .page-heading h1 {
+    font-size: 20px;
+  }
+  .page-heading p {
+    font-size: 12px;
+  }
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 420px) {
+  .page-header {
+    grid-template-columns: 68px minmax(0, 1fr);
+    gap: 8px 10px;
+  }
+  .brand-area .company-logo {
+    width: 66px;
+    height: 52px;
+  }
 }

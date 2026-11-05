@@ -106,43 +106,51 @@ export default function AppraisalForm({ selectedRecord, clearSelectedRecord }) {
 
   return (
     <main className="appraisal-container">
-      <section className="form-card">
-        <form onSubmit={handleSubmit}>
-          <EmployeeDetails form={form} updateField={updateField} />
-          {error && <p className="form-error" role="alert">{error}</p>}
-          <button type="submit" className="generate-button" disabled={isSaving}>
-            {isSaving ? "Saving..." : "Generate Appraisal Letter"}
-          </button>
-        </form>
-      </section>
-
-      <div className="appraisal-actions">
-        <PdfDownloadButton appraisalId={savedAppraisalId} disabled={!isGenerated} />
-        <button type="button" className="action-button edit-button" disabled={!isGenerated}
-          onClick={() => { setIsGenerated(false); setSavedAppraisalId(null); }}>
-          <span aria-hidden="true">✎</span> Edit Letter
-        </button>
-        <button type="button" className="action-button email-send-button"
-          onClick={handleSendEmail} disabled={!isGenerated || isSendingEmail}>
-          <span aria-hidden="true">✉</span> {isSendingEmail ? "Sending..." : "Email Appraisal Letter"}
-        </button>
-      </div>
-      {emailMessage && <p className="email-success" role="status">{emailMessage}</p>}
-      {emailError && <p className="form-error" role="alert">{emailError}</p>}
-
-      {isGenerated ? (
-        <section className="generated-result">
-          <div className="result-toolbar">
-            <div><h2>Appraisal Letter Generated</h2>
-              <p>Increment Percentage: <strong>{incrementPercentage.toFixed(2)}%</strong></p>
+      <div className="workspace-grid">
+        <section className="form-card">
+          <div className="panel-heading"><span className="panel-icon">♙</span><h2>Employee Appraisal Details</h2></div>
+          <form onSubmit={handleSubmit}>
+            <EmployeeDetails form={form} updateField={updateField} />
+            {error && <p className="form-error" role="alert">{error}</p>}
+            <div className="appraisal-actions">
+              <button type="submit" className="generate-button" disabled={isSaving}>
+                {isSaving ? "Saving..." : "▣ Generate Appraisal Letter"}
+              </button>
+              <PdfDownloadButton appraisalId={savedAppraisalId} disabled={!isGenerated} />
+              <button type="button" className="action-button edit-button" disabled={!isGenerated}
+                onClick={() => { setIsGenerated(false); setSavedAppraisalId(null); }}>
+                ✎ Edit Letter
+              </button>
+              <button type="button" className="action-button email-send-button"
+                onClick={handleSendEmail} disabled={!isGenerated || isSendingEmail}>
+                ✉ {isSendingEmail ? "Sending..." : "Email Letter"}
+              </button>
             </div>
-          </div>
-          <AppraisalLetterPreview form={form} incrementPercentage={incrementPercentage} salarySettings={form} />
+          </form>
+          {emailMessage && <p className="email-success" role="status">{emailMessage}</p>}
+          {emailError && <p className="form-error" role="alert">{emailError}</p>}
         </section>
-      ) : (
-        <p className="empty-letter-message">No letter generated yet. Fill in the form and click "Generate Appraisal Letter".</p>
-      )}
-
+        <section className="preview-card">
+          <div className="panel-heading preview-heading">
+            <span className="panel-icon">▤</span><h2>Appraisal Letter Preview</h2>
+            <span className="preview-status">{isGenerated ? "Generated" : "Live preview"}</span>
+          </div>
+          {isGenerated ? (
+            <div className="generated-result">
+              <div className="result-toolbar">
+                <p>Increment Percentage: <strong>{incrementPercentage.toFixed(2)}%</strong></p>
+              </div>
+              <AppraisalLetterPreview form={form} incrementPercentage={incrementPercentage} salarySettings={form} />
+            </div>
+          ) : (
+            <div className="preview-placeholder">
+              <div className="placeholder-icon">▤</div>
+              <h3>Your appraisal letter will appear here</h3>
+              <p>Complete the employee details and select Generate Appraisal Letter to create the letter preview.</p>
+            </div>
+          )}
+        </section>
+      </div>
     </main>
   );
 }
